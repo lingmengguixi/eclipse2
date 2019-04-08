@@ -1,0 +1,92 @@
+%% @author Administrator
+%% @doc @todo Add description to 'ChatServer'.
+
+
+-module('chatServer').
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0]).
+-include("head.hrl").
+%% 非使用通用服务器搭建的服务端
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+-define(CORE,coreProcess).
+
+start()->
+    init().
+
+%% 初始化，启动必须的进程
+init()->
+	Pid=whereis(?CORE),
+	case Pid of
+		undefined->
+			Pid0 = spawn(fun()->core() end),
+			register(?CORE, Pid0),
+			_Pid1 = spawn(fun()->listen_process_init(Pid0) end);		
+	    Pid->
+            exit({'the server had run with the pid:',Pid})
+    end.
+    
+
+%% 管理不同用户的登陆和退出
+listen_process_init(Core)->
+	Core!{add,self(),"listen process"},
+    case gen_tcp:listen(?PORT, [binary,{packet,4},{reuseaddr,true},{active,true}]) of
+		{ok,Listen}-> io:format("I:start listen...~n"),
+					  listen_process(Listen,Core);
+		{error,eaddrinuse}->io:format("the illegal port!~n");
+        Other->io:format("E:cannot run:~p~n",[Other])
+	end.
+
+listen_process(Listen,Core)->
+    try gen_tcp:accept(Listen) of
+		{ok,Socket}->
+			UserServer=spawn(fun()->server_process_init(Socket,Core) end),
+			gen_tcp:controlling_process(Socket, UserServer),   %设置为新的进程接管Socket的消息
+			listen_process(Listen,Core);
+        Other->io:format("E:cannot run:~p~n",[Other])
+    catch
+        A:B-> io:format("E:fail to accpet new User!~n~p:~p~n",[A,B])
+    end.
+    
+%% 服务单独一个用户进程
+server_process_init(Socket,Core)->
+	Core!{add,self(),"server only a user process"},
+	Core!{user_login,"ee"},
+	io:format("new user connect!~n"),
+    server_process(Socket,Core).
+		
+server_process(Socket,Core)->
+   receive
+      {tcp,Socket,_Bin}->
+          io:format("~p",[_Bin]),
+		  server_process(Socket,Core);
+      {tcp_closed,Socket}->
+          Core!{user_logout,"aa"}
+   end.
+
+%% 核心进程，负责处理错误的进程
+core()->
+	process_flag(trap_exit,true),
+	io:format("I:start core[~p] process..~n",[self()]),
+	put(userNum,0),
+	receive
+		{add,Pid,Msg}->
+			monitor(process,Pid),
+			io:format("I:process ~p run:~p~n",[Pid,Msg]);
+	    {'DOWN',_,process,Pid,Why}->
+            io:format("E:the process exist:~p~ncause:~p~n",[Pid,Why]);
+	    {user_logout,Msg}->
+            Num=get(userNum),
+			Num1=Num-1,
+            put(userNum,Num1),
+			io:format("the user logout,inline:~p~n",[Num1]);
+		{user_login,Msg}->
+            Num=get(userNum),
+			Num1=Num+1,
+            put(userNum,Num1),
+			io:format("the user login,inline:~p~n",[Num1]);
+    end.

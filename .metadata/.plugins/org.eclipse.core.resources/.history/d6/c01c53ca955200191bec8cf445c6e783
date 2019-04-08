@@ -1,0 +1,31 @@
+%% @author Administrator
+%% @doc @todo Add description to chatConnect.
+
+
+-module(chatConnect).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([]).
+-include("head.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start_link() ->
+    spawn_link(fun()->init() end).
+
+init() ->
+    register(?CONNECTNAME, self()),
+	{ok,Listen}=gen_tcp:listen(?PORT, [binary,{packet,4},{reuseaddr,true},{active,true}]),
+    loop(Listen).
+
+loop(Listen)->
+    {ok,Socket}=gen_tcp:accept(Listen),
+	?SHOW("a user connect"),
+	gen_tcp:close(Socket),
+	loop(Listen).

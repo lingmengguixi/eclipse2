@@ -1,0 +1,48 @@
+%% @author Administrator
+%% @doc @todo Add description to chatConnect.
+
+
+-module(chatConnect).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([]).
+-include("head.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start_link() ->
+    proc_lib:start_link(?MODULE, init, [self()]).
+
+%% init(Parent) ->
+%%     register(?CONNECTNAME, self()),
+%%     Chs = channels(),
+%%     Deb = sys:debug_options([]),
+%%     proc_lib:init_ack(Parent, {ok, self()}),
+%%     loop(Chs, Parent, Deb).
+%% 
+%% loop(Chs, Parent, Deb)->
+%%     receive
+%%         {From, alloc} ->
+%%             Deb2 = sys:handle_debug(Deb, fun ch4:write_debug/3,
+%%                                     ch4, {in, alloc, From}),
+%%             {Ch, Chs2} = alloc(Chs),
+%%             From ! {ch4, Ch},
+%%             Deb3 = sys:handle_debug(Deb2, fun ch4:write_debug/3,
+%%                                     ch4, {out, {ch4, Ch}, From}),
+%%             loop(Chs2, Parent, Deb3);
+%%         {free, Ch} ->
+%%             Deb2 = sys:handle_debug(Deb, fun ch4:write_debug/3,
+%%                                     ch4, {in, {free, Ch}}),
+%%             Chs2 = free(Ch, Chs),
+%%             loop(Chs2, Parent, Deb2);
+%% 
+%%         {system, From, Request} ->
+%%             sys:handle_system_msg(Request, From, Parent,
+%%                                   ch4, Deb, Chs)
+%%     end.

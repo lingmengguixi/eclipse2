@@ -1,0 +1,23 @@
+%% @author Administrator
+%% @doc @todo Add description to mysql.
+
+
+-module(mysql).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([init/0]).
+-include("head1.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+   %% 初始化表
+init()->
+   mysql:start_link(p1, ?DB_HOST, ?DB_PORT, ?DB_USER, ?DB_PASS, ?DB_NAME, fun(_, _, _, _) -> ok end,"utf8"),
+   mysql:connect(p1, ?DB_HOST, undefined, ?DB_USER, ?DB_PASS, ?DB_NAME, true),
+   mysql:fetch(p1, <<"create table if not exists logger_mychat(time long primary key,connect_num long,login_num long) engine = InnoDB">>),
+   ok.

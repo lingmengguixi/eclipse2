@@ -1,0 +1,44 @@
+%% @author Administrator
+%% @doc @todo Add description to list_test.
+
+
+-module(list_test).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-compile(export_all).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+%% list的合并
+merge(L,Data,1)->
+	[Data|L].
+merge(L,Data,N)->
+	[Data|merge(L,Data,N-1)].
+
+%% lists的分裂
+separate([K|T])->
+	K.
+
+%% 测试大数据性能
+t(digit_test,N,M) ->
+	%% M+1其中1表示有一个主键,每个数据为1000
+    Data=merge([],1000,M+1),
+    F = fun(_N)->
+			fun (_I)->
+               merge([],Data,_N)
+			 end
+        end,
+    io:format("test the list:~n"),
+    ptester:run(1, [
+            {erlang:integer_to_list(1000)++" to merge", F(1000)}
+            ,{"big digit to find", F2}
+            ,{"no  digit to store", F3}
+            ,{"no  digit to find", F4}
+        ]
+    ).

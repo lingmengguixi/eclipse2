@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move &apos;1.txt, 10.txt, 2.txt, 3.txt, 4.txt, 5.txt, 6.txt, 7.txt, 8.txt, 9.txt&apos; to &apos;xiaohao&apos;" description="Move 10 resources to &apos;xiaohao&apos;" destination="xiaohao" element1="1.txt" element10="9.txt" element2="10.txt" element3="2.txt" element4="3.txt" element5="4.txt" element6="5.txt" element7="6.txt" element8="7.txt" element9="8.txt" flags="7" id="org.eclipse.ltk.core.refactoring.move.resources" resources="10" stamp="1554287988368" updateReferences="true"/>
+</session>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;MysqlOfErlang/src/mysqltest.erl&apos; to &apos;test.erl&apos;" description="Rename resource &apos;mysqltest.erl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/mysqltest.erl" name="test.erl" stamp="1552549500729" updateReferences="true"/>
+</session>

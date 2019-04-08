@@ -1,0 +1,200 @@
+%% @author Administrator
+%% @doc @todo Add description to preUserServer.
+
+
+-module(preUserServer).
+-behaviour(gen_server).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3,logout/1]).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start_link/1]).
+-include("head1.hrl").
+
+
+%% ====================================================================
+%% Behavioural functions
+%% ====================================================================
+-record(state, {}).
+
+%% init/1
+%% ====================================================================
+%% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:init-1">gen_server:init/1</a>
+-spec init(Args :: term()) -> Result when
+	Result :: {ok, State}
+			| {ok, State, Timeout}
+			| {ok, State, hibernate}
+			| {stop, Reason :: term()}
+			| ignore,
+	State :: term(),
+	Timeout :: non_neg_integer() | infinity.
+%% ====================================================================
+init([Socket]) ->
+    ?SHOW("I:[server] for pre user proc,pid:~p run!~n",[self()]),
+	?SHOW("I:the socket is ~p~n",[Socket]),
+	put(socket,Socket),
+	put(loginState,false),
+	myChatServer2:userConnect(self()),
+    {ok, #state{}}.
+
+
+%% handle_call/3
+%% ====================================================================
+%% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:handle_call-3">gen_server:handle_call/3</a>
+-spec handle_call(Request :: term(), From :: {pid(), Tag :: term()}, State :: term()) -> Result when
+	Result :: {reply, Reply, NewState}
+			| {reply, Reply, NewState, Timeout}
+			| {reply, Reply, NewState, hibernate}
+			| {noreply, NewState}
+			| {noreply, NewState, Timeout}
+			| {noreply, NewState, hibernate}
+			| {stop, Reason, Reply, NewState}
+			| {stop, Reason, NewState},
+	Reply :: term(),
+	NewState :: term(),
+	Timeout :: non_neg_integer() | infinity,
+	Reason :: term().
+%% ====================================================================
+handle_call(logout, _From, State) ->
+	io:format("Formaxcfsdddddsssss~n"),
+    Reply = ok,
+	logout(),
+    {reply, Reply, State};
+handle_call(Request, From, State) ->
+    Reply = ok,
+	io:format("?????:~p~n",[Request]),
+    {reply, Reply, State}.
+
+
+%% handle_cast/2
+%% ====================================================================
+%% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:handle_cast-2">gen_server:handle_cast/2</a>
+-spec handle_cast(Request :: term(), State :: term()) -> Result when
+	Result :: {noreply, NewState}
+			| {noreply, NewState, Timeout}
+			| {noreply, NewState, hibernate}
+			| {stop, Reason :: term(), NewState},
+	NewState :: term(),
+	Timeout :: non_neg_integer() | infinity.
+%% ====================================================================
+handle_cast(Msg, State) ->
+    {noreply, State}.
+
+
+%% handle_info/2
+%% ====================================================================
+%% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:handle_info-2">gen_server:handle_info/2</a>
+-spec handle_info(Info :: timeout | term(), State :: term()) -> Result when
+	Result :: {noreply, NewState}
+			| {noreply, NewState, Timeout}
+			| {noreply, NewState, hibernate}
+			| {stop, Reason :: term(), NewState},
+	NewState :: term(),
+	Timeout :: non_neg_integer() | infinity.
+%% ====================================================================
+
+handle_info({tcp,Socket,Packet}, State) ->
+	case Packet of
+		<<?LOGINFLAG,IdLen:4,PasswLen:4,Id_binary:IdLen/binary,Passw_binary:PasswLen/binary>>->
+			 Passw=binary_to_list(Passw_binary),
+			 Id=binary_to_list(Id_binary),
+			 case myChatServer2:login(Id, Passw, self()) of
+				 ok->?SHOW("I:[~p]login ok~n",[Id]),
+					 put(loginState,true),
+					 put(userid,Id),
+					 gen_tcp:send(Socket, <<201,1>>);
+                 {false,Why}->
+					 ?SHOW("I:[~p]login false:~p~n",[Id,Why]),
+					 gen_tcp:send(Socket, <<201,0>>)
+			 end;
+		<<?LOGOUTFLAG>>->
+			logout();
+		A->
+			?SHOW("Id:receive len:~p packet:~p~n",[erlang:length(binary_to_list(Packet)),A]),
+			ok
+    end ,
+    {noreply, State};
+handle_info({tcp_closed,Socket}, State) ->
+	logout(),
+    {stop, normal, State};
+handle_info(stop,State)->
+	logout(),
+	{stop, normal, State};
+handle_info(logout,State)->
+	logout(),
+	{noreply, State};
+handle_info(Info, State) ->
+	io:format("Info[~p]:~p~n",[self(),Info]),
+    {noreply, State}.
+
+
+%% terminate/2
+%% ====================================================================
+%% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:terminate-2">gen_server:terminate/2</a>
+-spec terminate(Reason, State :: term()) -> Any :: term() when
+	Reason :: normal
+			| shutdown
+			| {shutdown, term()}
+			| term().
+%% ====================================================================
+terminate(Reason, State) ->
+	?SHOW("I:[server] pre user proc,pid:~p stop!~n",[self()]),
+	myChatServer2:userDisconnect(self()),
+    ok.
+
+
+%% code_change/3
+%% ====================================================================
+%% @doc <a href="http://www.erlang.org/doc/man/gen_server.html#Module:code_change-3">gen_server:code_change/3</a>
+-spec code_change(OldVsn, State :: term(), Extra :: term()) -> Result when
+	Result :: {ok, NewState :: term()} | {error, Reason :: term()},
+	OldVsn :: Vsn | {down, Vsn},
+	Vsn :: term().
+%% ====================================================================
+code_change(OldVsn, State, Extra) ->
+    {ok, State}.
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start_link(Socket)->
+	Ans={ok,Pid}=gen_server:start_link(?PREUSER_MODULE, [Socket], []),
+	Ans.
+
+logout(Pid)->
+	?SHOW("asssssssssss:~p~n",[Pid]),
+  % gen_server:call(Pid, logout),
+Pid!logout,
+   ?SHOW("ssssssssssssssssssssssssssssssss").
+
+%% 用户发起退出
+logout()->
+	        Socket=get(socket),
+  			UserId=get(userid),
+             case get(loginState) of
+                  true->put(loginState,false),
+                        case myChatServer2:logout(UserId) of
+                             ok->?SHOW("I:[~p]logout ok~n",[UserId]),
+                                 gen_tcp:send(Socket, <<202,1>>);
+                             {false,Why}->?SHOW("I:[~p]logout false:~p~n",[UserId,Why]),
+                                 gen_tcp:send(Socket, list_to_binary([202,0|Why]))
+                        end;
+                  false->Why="user not login!",
+                         gen_tcp:send(Socket, list_to_binary([202,0|Why])),
+                         ?SHOW("I:[~p]logout false:~p~n",[UserId,Why])
+             end.
+
+%% 强制退出
+logout2()->
+    Socket=get(socket),
+	UserId=get(userid),
+     case get(loginState) of
+          true->put(loginState,false),
+				?SHOW("I:[~p]logout ok with force~n",[UserId]),
+				gen_tcp:send(Socket, <<202,2>>);
+          false->?SHOW("I:error in my app")
+     end.

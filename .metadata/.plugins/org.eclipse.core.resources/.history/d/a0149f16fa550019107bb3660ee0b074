@@ -1,0 +1,105 @@
+package org.scau.lzk.auto;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+
+import org.scau.lzk.Tool;
+
+import application.MainScene;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
+
+public class ReceiveThread22 extends Thread{
+	    private Socket socket;
+	    private MainScene1 mainScene;
+	  //  private Timeline timeline;
+	    private String[] packFile;
+	    private Label tip;
+	    private byte[] cache=new byte[100000];
+		public ReceiveThread22(Socket socket, MainScene1 mainScene,String[] packFile,Label tip) {
+			this.socket=socket;
+			this.mainScene=mainScene;
+			this.packFile=packFile;
+			this.tip=tip;
+		}
+		@Override
+		public void run(){
+			System.out.println("主socket可连接");
+			try {
+				OutputStream outs=socket.getOutputStream();
+				InputStream ins=socket.getInputStream();
+//				timeline=new Timeline();
+//				for(int i=0;i<packFile.length;i++){
+//					final int ii=i;
+//					timeline.getKeyFrames().add(new KeyFrame(Duration.millis(2000*(i+1)), event->{
+//						byte[] packet1;
+//						try {
+//							packet1 = Tool.getHexFromFile(packFile[ii]);
+//							Platform.runLater(()->{
+//								mainScene.showOnTip(tip,"send "+(ii+2)+".txt");
+//							});
+//				            outs.write(packet1);
+//				            outs.flush(); 
+//						} catch (Exception e) {
+//							System.err.println("E:"+e);
+//							timeline.stop();
+//						}
+//
+//					}));
+//				}
+				for(int i=0;i<packFile.length;i++){
+					byte[] packet1;
+					packet1 = Tool.getHexFromFile(packFile[i]);
+					Platform.runLater(()->{
+					   mainScene.showOnTip(tip,"send "+packFile[i]);
+				   });
+				}
+		    	 int count=0;
+		    	 long time=System.currentTimeMillis();
+		    	 long temp;
+	//	    	 timeline.play();
+		    	 while(true){
+		    		 int c=ins.read();
+		    		 if(c==-1) {
+		    			 System.out.println("对方发送完毕");
+		    			 break;
+		    		 }
+		    		 temp=System.currentTimeMillis();
+		    		 if(temp>time+1000) {
+		    			 if(count!=0){
+			    			 System.out.println("receive count:"+count);
+	                         Tool.showHexWithByte(cache, count);	 
+		    			 }
+		    			 count=0;
+		    			 cache[count++]=(byte)c;
+		    		 }else {
+		    			 cache[count++]=(byte)c;
+		    		 }
+		    		 time=temp;
+		    	 }
+			} catch (Exception e1) {
+				System.err.println("E:"+e1);
+				if(socket!=null&&!socket.isClosed()){
+					try {
+						socket.close();
+					} catch (IOException e2) {
+						
+					}
+				}
+			}
+			//timeline.stop();
+			System.out.println("主socket断开");
+		     Platform.runLater(()->{
+		    	try {
+					mainScene.stop();
+				} catch (IOException e) {
+					 
+				} 
+		    });
+		}
+}

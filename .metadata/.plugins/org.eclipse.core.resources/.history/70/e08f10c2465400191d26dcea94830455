@@ -1,0 +1,31 @@
+
+-module(mychat2_sup).
+
+-behaviour(supervisor).
+-include("head1.hrl").
+%% API
+-export([start_link/0]).
+
+%% Supervisor callbacks
+-export([init/1]).
+
+%% Helper macro for declaring children of supervisor
+-define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+
+%% ===================================================================
+%% API functions
+%% ===================================================================
+
+start_link() ->
+    supervisor:start_link({local, ?SUPTREENAME}, ?MODULE, []).
+
+%% ===================================================================
+%% Supervisor callbacks
+%% ===================================================================
+
+init([]) ->
+	?SHOW("I:the sup tree[~p] work!~n",[self()]),
+	AChild = {?SERVERNAME, {?SERVERMODULE, start_link, []}, permanent,infinity, worker, [?SERVERMODULE]},
+	BChild = {?SUP_PREUSER,{?}},
+    A={ok, { {one_for_one, 1, 10}, [AChild,]} }
+    ,A.

@@ -1,0 +1,25 @@
+%% @author Administrator
+%% @doc @todo Add description to my_bank.
+
+
+-module(my_bank).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0,stop/0,new_account/1,deposite/2,withdraw/2]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+deposite(Who,Amount)
+withdraw(Who,Amount)
+
+start()->gen_server:start_link({_local,?SERVER},?MODULE, [],[]).
+stop()->gen_server:call(?MODULE,stop).
+new_account(Who)->gen_server:call(?MODULE, {new,Who}).
+deposite(Who,Amount)->gen_server:call(?MODULE, {add,Who,Amount}).

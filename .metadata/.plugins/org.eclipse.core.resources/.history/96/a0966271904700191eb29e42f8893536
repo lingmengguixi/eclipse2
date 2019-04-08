@@ -1,0 +1,31 @@
+%% @author Administrator
+%% @doc @todo Add description to fun_text.
+
+
+-module(fun_text).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-compile(export_all).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+fun1([],T)->
+   T;
+fun1([X1|L],T)->
+   fun1(L,[X1*2|T]).
+
+
+t(N)->
+   L=lists:seq(1, N),
+   F1=fun(_X)->io:format("start ~p~n",[_X]),fun1(L,[]),io:format("end ~p~n",[_X]) end,
+   ptester:run(1, [
+           {"haha",F1}
+		  ,{"haha",F1}
+        ]
+    ).

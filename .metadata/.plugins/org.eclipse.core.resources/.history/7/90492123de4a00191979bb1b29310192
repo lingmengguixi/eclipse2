@@ -1,0 +1,23 @@
+%% @author Administrator
+%% @doc @todo Add description to chatClient.
+
+
+-module(chatClient).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0]).
+-include("head.hrl").
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start()->
+   ss.
+
+login()->
+   gen_tcp:connect(?HOST,PORT,[binary,{packet,0}]),
+  dd.

@@ -1,0 +1,35 @@
+%% @author Administrator
+%% @doc @todo Add description to chatConnect.
+
+
+-module(chatConnect).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start_link/0]).
+-include("head1.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start_link() ->
+	Pid=erlang:whereis(?CONNECTNAME),
+	if
+		    Pid  =/= undefined->
+			register(?CONNECTNAME, spawn_link(fun()->init() end));
+		    true->ok
+	end.
+
+init() ->
+	{ok,Listen}=gen_tcp:listen(?PORT, [binary,{packet,4},{reuseaddr,true},{active,true}]),
+    loop(Listen).
+
+loop(Listen)->
+    {ok,Socket}=gen_tcp:accept(Listen),
+	?SHOW("a user connect"),
+	supervisor:start_child(?SUPTREENAME, [{?PREUSERSERVERNAME, {?PREUSERSERVERMODULE, start_link, [Socket]}, permanent,infinity, worker, [?PREUSERSERVERMODULE]}]),
+	loop(Listen).

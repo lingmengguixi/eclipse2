@@ -1,0 +1,27 @@
+%% @author Administrator
+%% @doc @todo Add description to info.
+
+
+-module(info).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([t/0]).
+-include("head1.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+t()->
+  ?SHOW("shell pid      :~p~n",[self()]),
+  ?SHOW("app pid        :~p~n",[whereis(?APPNAME)]),
+  ?SHOW("sup tree pid   :~p~n",[whereis(?SUPTREENAME)]),
+  ?SHOW("core server pid:~p~n",[whereis(?SERVERNAME)]),
+  ?SHOW("listen proc pid:~p~n",[whereis(?CONNECTNAME)]),
+  ?SHOW("process info:"),
+  ?SHOW("~p~n",[erlang:process_info(whereis(?SUPTREENAME))]).
+

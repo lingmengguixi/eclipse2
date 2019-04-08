@@ -1,0 +1,29 @@
+%% @author Administrator
+%% @doc @todo Add description to demo3.
+
+
+-module(demo3).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([main/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+randomList(0)->
+	[];
+randomList(N)->
+  [random:uniform(100000)|randomList(N-1)].
+
+randomData(0,M)->
+	[];
+randomData(N,M)->
+	[randomList(M)|randomData(N-1,M)].
+
+main()->
+  randomData(10, 1).

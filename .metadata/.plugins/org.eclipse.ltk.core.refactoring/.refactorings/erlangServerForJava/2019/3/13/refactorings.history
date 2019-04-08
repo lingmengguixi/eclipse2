@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;erlangServerForJava/src/Test.erl&apos; to &apos;test.erl&apos;" description="Rename resource &apos;Test.erl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/Test.erl" name="test.erl" stamp="1553582567901" updateReferences="true"/>
+</session>

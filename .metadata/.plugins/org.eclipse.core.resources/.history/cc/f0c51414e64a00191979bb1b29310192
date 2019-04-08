@@ -1,0 +1,61 @@
+%% @author Administrator
+%% @doc @todo Add description to 'ChatServer'.
+
+
+-module('chatServer').
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0]).
+-include("head.hrl").
+%% 非使用通用服务器搭建的服务端
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start()->
+   try register(?MODULE,spawn_link(fun()->init() end)) of
+	   true->io:format("I:server start run~n")
+   catch
+	   A:B->
+		   io:format("E:fail to start server!~n")
+   end,
+   whereis(?MODULE).
+
+init()->
+	Pid=whereis(?MODULE),
+	if 
+		undefined =/= Pid->
+			exit({'the server had run with the pid:',Pid});
+	    true->ok
+    end,
+    try gen_tcp:listen(?PORT, [list,{packet,4},{reuseaddr,true},{active,true}]) of
+		{ok,Listen}-> listen_process(Listen);                    
+        Other->io:format("E:cannot run:~p~n",[Other])
+	catch
+		A:B-> io:format("E:fail to start listen event!~n~p:~p~n",[A,B])
+	end.
+
+listen_process(Listen)->
+	io:format("I:start listen...~n"),
+    try gen_tcp:accept(Listen) of
+		{ok,Socket}->
+			UserServer=spawn(fun()->server_process(Socket) end),
+			gen_tcp:controlling_process(Socket, UserServer),   %设置为新的进程接管Socket的消息
+			listen_process(Listen);
+        Other->io:format("E:cannot run:~p~n",[Other])
+    catch
+        A:B-> io:format("E:fail to accpet new User!~n~p:~p~n",[A,B])
+    end.
+    
+
+server_process(Socket)->
+   receive
+      {tcp,Socket,Bin}->
+          io:format("new User connect!~n");
+      {tcp_closed,Socket}->
+          io:format("The User disconect~n")
+   end.
+

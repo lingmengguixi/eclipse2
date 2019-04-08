@@ -1,0 +1,39 @@
+%% @author Administrator
+%% @doc @todo Add description to gen_event_deal1.
+
+
+-module(gen_event_deal1).
+-behaviour(gen_event).
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([init/1,terminate/2,handle_event/2,handle_info/2]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+%% 事件处理器添加时候调用的函数
+init(InitArgs)->
+	io:format("event deal[~p] add!~n",[?MODULE]),
+	{ok,{status,InitArgs}}.
+
+%% 事件处理器移除的时候调用的函数
+terminate(Args,Status)->
+    io:format("event deal[~p] remove! status:~p~ncause:~p~n",[?MODULE,Status,Args]),
+    Status.
+
+%% 事件处理器的主体,与gen_event的notify有关
+handle_event(Event,Status)->
+   io:format("event[~p]:do....~n",[?MODULE]),
+   io:format("event:~p Status:~p~n",[Event,Status]),
+   io:format("result:~p~n",[Event(10)]),
+   {ok,Status}.
+
+handle_info(Info, Status)->
+   io:format("Info:~p  Status:~p~n",[Info,Status]),
+   {ok,Status}.
+
+

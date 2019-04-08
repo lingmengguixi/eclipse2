@@ -1,0 +1,34 @@
+%% @author Administrator
+%% @doc @todo Add description to digit_test.
+
+
+-module(digit_test).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+%% 大数据测试
+%% Key—Value中的Value含有10万元素以上,称为大数据
+
+%% 重复的字符串段，即某一个重复的字符串只有中间的一段不同，其余相同
+repeatList(Arg_before,Max,Max,Pa,Pz)->
+   Arg_before++Pa++erlang:integer_to_list(Max)++Pz;
+repeatList(Arg_before,I,Max,Pa,Pz)->
+   repeatList(Arg_before++Pa++erlang:integer_to_list(Max)++Pz,I+1,Max,Pa,Pz).
+
+
+%% 构建mysql表，值数量为N
+createMysqlTable(N)->
+      %% mysql:fetch(p1, <<"create table test_memory (id int not null auto_increment,row1 int not null, row2 int not null,row3 int not null,row4 int not null,row5 int not null,row6 int not null,row7 int not null,row8 int not null,row9 int not null, primary key (id)) engine = memory">>),
+      repeatList("create table test_memory (id int not null auto_increment,",1,N,"row"," int not null,")++"primary key (id)) engine = memory".
+
+init(N)->
+   createMysqlTable(N).

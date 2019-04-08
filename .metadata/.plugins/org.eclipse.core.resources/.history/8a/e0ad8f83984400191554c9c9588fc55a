@@ -1,0 +1,52 @@
+%% @author Administrator
+%% @doc @todo Add description to demo3.
+
+
+-module(demo3).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([main/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+randomList(0)->
+	[];
+randomList(N)->
+  [random:uniform(100000)|randomList(N-1)].
+
+randomData(0,M)->
+	[];
+randomData(N,M)->
+	[randomList(M)|randomData(N-1,M)].
+
+test1(Data)->
+	lists:map(fun lists:sort/1, Data).
+
+test2(Data)->
+	S=self(),
+	Ref=erlang:make_ref(),
+	lists:foreach(fun(I) -> spawn(fun()->test2_do(I,Ref,S) end) end, Data),
+	gather(erlang:length(Data),Ref).
+
+test2_do(I,Ref,S)->
+	S!{Ref,lists:sort(I)}.
+
+gather(0,_)->
+	[];
+gather(N,Ref)->
+	receive
+		{Ref,Ret}->[Ret|gather(N-1,Ref)]
+	end.
+
+
+
+main()->
+  Data=randomData(100, 1000),
+  {T1,_}=timer:tc(fun test1/1,[Data]),
+  test2(Data).

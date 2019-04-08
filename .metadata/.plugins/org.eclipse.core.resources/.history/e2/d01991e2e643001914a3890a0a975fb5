@@ -1,0 +1,36 @@
+%% @author Administrator
+%% @doc @todo Add description to server1.
+
+
+-module(server1).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+start()->
+   {ok,Listen}=gen_tcp:listen(6000, [binary,{packet,4},{reuseaddr,true},{active,true}]),
+   loop_listen(Listen).
+
+loop_listen(Listen)->
+	{ok,Socket}=gen_tcp:accept(Listen),
+	io:format("had client link:~n"),
+	loop_talk(Socket),
+    loop_listen(Listen).
+
+loop_talk(Socket)->
+	receive
+		{tcp,Socket,Bin}->
+            Str=erlang:binary_to_term(Bin),
+			io:format("~s~n",[Str]),
+			loop_talk(Socket);
+		{tcp_close,Socket}->
+			io:format("Server socket closed~n")
+	end.

@@ -1,0 +1,65 @@
+package org.scau.lzk.auto;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
+
+import org.scau.lzk.Tool;
+
+import application.MainScene;
+
+public class ReceiveThread21 extends Thread{
+    private Socket socket=null;
+    private MainScene1 mainScene;
+    private String accountFile;
+    private byte[] cache = new byte[100000];
+	public ReceiveThread21(Socket socket, MainScene1 mainScene,String accountFile) {
+		this.socket=socket;
+		this.mainScene=mainScene;
+		this.accountFile=accountFile;
+	}
+	@Override
+	public void run(){
+		System.out.println("账号许可连接");
+		try {
+			OutputStream outs=socket.getOutputStream();
+			InputStream ins=socket.getInputStream();
+			socket.setSoTimeout(2000);
+			byte[] packet1=Tool.getHexFromFile(accountFile);
+            outs.write(packet1);
+            outs.flush();
+            int count=0;
+            while(true){
+            	try{
+            	int c=ins.read();
+            	if(c==-1) break;
+            	cache[count++]=(byte)c;
+            	}catch (SocketTimeoutException e) {
+					break;
+				}
+            }
+			System.out.println("I:[account file] send " + accountFile + " receive count:" + count);
+			if(count<50) Tool.showHexWithByte(cache, count);
+		} catch (Exception e) {
+			System.err.println("E:"+e);
+			if(socket!=null&&!socket.isClosed()){
+				try {
+					socket.close();
+				} catch (IOException e1) {
+				}
+			}
+		}
+        System.out.println("账号许可断开");
+	}
+	public void stop1(){
+		if(socket!=null&&!socket.isClosed()){
+			try {
+				socket.close();
+			} catch (IOException e) {
+			}
+		}
+	}
+}

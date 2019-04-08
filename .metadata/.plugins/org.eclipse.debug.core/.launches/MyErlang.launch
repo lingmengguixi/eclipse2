@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.erlide.backend.erlangProcess">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/MyErlang"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables"/>
+<booleanAttribute key="org.erlide.core.console" value="true"/>
+<stringAttribute key="org.erlide.core.cookie" value="erlide"/>
+<booleanAttribute key="org.erlide.core.has_backend" value="false"/>
+<listAttribute key="org.erlide.core.interpretModules">
+<listEntry value="MyErlang:demo1.erl"/>
+<listEntry value="MyErlang:ets_test.erl"/>
+<listEntry value="MyErlang:my_bank.erl"/>
+<listEntry value="MyErlang:socket_examples.erl"/>
+<listEntry value="MyErlang:dets_test.erl"/>
+<listEntry value="MyErlang:homework.erl"/>
+</listAttribute>
+<booleanAttribute key="org.erlide.core.loadAllNodes" value="false"/>
+<booleanAttribute key="org.erlide.core.longName" value="false"/>
+<stringAttribute key="org.erlide.core.nodeName" value="MyErlang"/>
+<stringAttribute key="org.erlide.core.projects" value="MyErlang"/>
+<stringAttribute key="org.erlide.core.runtime" value="erl10.2"/>
+<stringAttribute key="org.erlide.core.working_dir" value="D:/code/eclipse2/MyErlang"/>
+</launchConfiguration>

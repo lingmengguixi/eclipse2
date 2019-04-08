@@ -1,0 +1,23 @@
+%% @author Administrator
+%% @doc @todo Add description to ets_build.
+
+
+-module(ets_build).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start()->
+   ets:new(etsT, [named_table, protected,set]),init().
+
+init()->
+	ets:insert(etsT, {aa,444}).

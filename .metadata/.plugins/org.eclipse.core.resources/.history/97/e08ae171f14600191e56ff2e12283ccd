@@ -1,0 +1,34 @@
+%% @author Administrator
+%% @doc @todo Add description to dict_pro_test.
+
+
+-module(dict_pro_test).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-compile(export_all).
+-include("head.hrl").
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+%% 测试进程字典读与写
+t(N)->
+    F1 = fun(_I)->
+            D = ptester:rand(1, 100000) + _I,
+            R = #row{row1=D, row2=D, row3=D, row4=D, row5=D, row6=D, row7=D, row8=D, row9=D},
+            put(_I,R)
+    end,
+    F2 = fun(_I)->
+            Id = ptester:rand(1, N),
+            get(Id)
+    end,
+    ptester:run(N, [
+			 {"pro dict put", F1}
+            ,{"pro dict get", F2}
+        ]
+    ).

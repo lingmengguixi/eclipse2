@@ -1,0 +1,7 @@
+package org.scau.lzk;
+
+import javafx.scene.Scene;
+
+public class MainScene extends Scene {
+
+}

@@ -1,0 +1,24 @@
+-define(SERVERNAME,myChatServer2).
+-define(SERVERMODULE,myChatServer2).
+-define(CONNECTNAME,connect2).
+-define(PORT,6565).
+
+-record(user, {
+         name   	 %% 用户名称
+        ,passwd="123456" 	 %% 用户登录密码
+        ,login_times=0 %% 登录次数
+        ,chat_times=0  %% 聊天次数
+        ,last_login=now()  %% 最后一次登录时间
+    }
+).
+-define(DEBUG,true).
+
+-ifdef(DEBUG).
+-ifndef(DEBUG_).
+-define(DEBUG_,true).
+-define(SHOW(A),io:format("~p~n",[A])).
+-endif.
+-else.
+-define(SHOW(A),ok).
+-endif.
+

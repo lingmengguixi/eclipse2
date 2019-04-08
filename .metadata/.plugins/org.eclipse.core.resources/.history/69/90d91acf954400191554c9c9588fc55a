@@ -1,0 +1,33 @@
+%% @author Administrator
+%% @doc @todo Add description to demo3.
+
+
+-module(demo3).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([main/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+randomList(0)->
+	[];
+randomList(N)->
+  [random:uniform(100000)|randomList(N-1)].
+
+
+re([X1|X2],T)->
+	re(X2,[X1|T]).
+
+reverse2([X1|X2])->
+	reverse2(X2)++[X1];
+reverse2([])->
+	[].
+
+main()->
+  randomList(3).

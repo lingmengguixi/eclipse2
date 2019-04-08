@@ -1,0 +1,28 @@
+%% @author Administrator
+%% @doc @todo Add description to ch_sup.
+
+
+-module(ch_sup).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-behaviour(supervisor).
+-export([start_link/0]).
+-export([init/1]).
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+
+
+start_link() -> 
+	supervisor:start_link(ch_sup, []). 
+%% one_for_one是重启策略
+%%　1和60定义了最大重启频率
+%% {ch3, …}是子规程
+init(_Args) -> 
+	{ok, {{one_for_one, 1, 60}, [{ch3, {ch3, start_link, []}, permanent, brutal_kill, worker, [ch3]}]}}.
+

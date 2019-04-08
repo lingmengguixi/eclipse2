@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;mychat2/src/aa.erl&apos; to &apos;aa1.erl&apos;" description="Rename resource &apos;aa.erl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/aa.erl" name="aa1.erl" stamp="1554263629712" updateReferences="true"/>
+</session>

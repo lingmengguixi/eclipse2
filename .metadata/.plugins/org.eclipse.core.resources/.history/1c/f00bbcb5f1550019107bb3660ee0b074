@@ -1,0 +1,85 @@
+package org.scau.lzk.auto;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+
+public class MainScene1 extends Scene{
+    public Button start_btn=new Button("启动");
+    public Button stop_btn=new Button("中止");
+    public Label tip1=new Label();
+    private String host1="52.80.105.132";
+    private int port1=5999;
+    private String host2="52-80-248-129.ip.igotgames.net";
+    private int port2=5991;
+    Pane root;
+    public double width;
+    public double height;
+    public ReceiveThread21 th1=null;
+    public ReceiveThread22 th2=null;
+    public Socket socket1=null;
+    public Socket socket2=null;
+    public MainScene1(Pane root, double width, double height) throws IOException{
+		super(root, width, height);
+		 this.root=root;
+		 this.width=width;
+		 this.height=height;
+		 
+		 start_btn.setLayoutX(2);
+		 start_btn.setLayoutY(2);
+		 
+		 stop_btn.setDisable(true);
+		 stop_btn.setLayoutX(60);
+		 stop_btn.setLayoutY(2);
+		 stop_btn.setDisable(true);
+		 
+		 start_btn.setOnAction(event->{
+			 try {
+				start();
+			} catch (Exception e1){
+				 System.err.println("E:"+e1);
+			}
+		 });
+		 
+		 stop_btn.setOnAction(event->{
+		     try {
+				stop();
+			} catch (IOException e) {
+				 System.err.println("E:"+e);
+			}	 
+		 });
+		 
+			tip1.setText("关闭");
+			tip1.setLayoutX(120);
+			tip1.setLayoutY(5);
+			
+		 root.getChildren().addAll(start_btn,stop_btn,tip1);
+		 
+	}
+    public void start() throws InterruptedException, UnknownHostException, IOException{
+    	 socket1 = new Socket(host1, port1);
+    	 socket2 = new Socket(host2,port2);
+    	 th1=new ReceiveThread21(socket1,this);
+    	 th1.start();
+    	 th2=new ReceiveThread22(socket2,this);
+    	 th2.start();
+    	 start_btn.setDisable(true);
+    	 stop_btn.setDisable(false);
+    }
+    
+    public void stop() throws IOException{
+   	     start_btn.setDisable(false);
+   	     stop_btn.setDisable(true);
+   	     tip1.setText("关闭");
+   	     if(socket1!=null&&!socket1.isClosed()) socket1.close();
+   	     if(socket2!=null&&!socket2.isClosed()) socket2.close();
+    }
+    public void showOnTip(Label tip,String s){
+    	tip.setText(s);
+    }
+}

@@ -1,0 +1,28 @@
+-define(SERVERNAME,myChatServer2).
+-define(SERVERMODULE,myChatServer2).
+-define(CONNECTNAME,connect2).
+-define(PORT,6565).
+-define(EVENTNAME,myEvent).
+-define(SUPTREENAME,mychat2_sup).
+-define(PREUSERSERVERNAME,preUserServer).
+-define(PREUSERSERVERMODULE,preUserServer).
+
+-record(user, {
+         
+    }
+).
+
+-define(DEBUG,true).
+
+%% 定义调试
+-ifdef(DEBUG).
+-ifndef(DEBUG_).
+-define(DEBUG_,true).
+-define(SHOW(A),io:format("~p~n",[A])).
+-define(SHOW(A,B),io:format(A,B)).
+-endif.
+-else.
+-define(SHOW(A),ok).
+-define(SHOW(A,B),ok).
+-endif.
+

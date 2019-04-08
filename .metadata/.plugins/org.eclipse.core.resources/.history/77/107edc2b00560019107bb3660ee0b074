@@ -1,0 +1,102 @@
+package org.scau.lzk.auto;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
+
+public class MainScene1 extends Scene{
+	public int COUNT=8;
+    public Button start_all_btn=new Button("一键启动");
+    public Button stop_all_btn=new Button("一键中止");
+    public Button[] start_btn=new Button[COUNT];
+    public Button[] stop_btn=new Button[COUNT];
+    public Label tip1=new Label();
+    private String host1="52.80.105.132";
+    private int port1=5999;
+    private String host2="52-80-248-129.ip.igotgames.net";
+    private int port2=5991;
+    Pane root;
+    public double width;
+    public double height;
+    
+    public ReceiveThread21[] th1=new ReceiveThread21[COUNT];
+    public ReceiveThread22[] th2=new ReceiveThread22[COUNT];
+    public Socket[] socket1=new Socket[COUNT];
+    public Socket[] socket2=new Socket[COUNT];
+    public String[] accountNameForEnglish={"xiaohao","lingmeng","taizhe","liangshi","shitou","tiekuang","mutou","other"};
+    public String[] accountNameForZh={"小号","灵梦","太者","粮食","石头","铁矿","木头","其他"};
+    public MainScene1(Pane root, double width, double height) throws IOException{
+		super(root, width, height);
+		 this.root=root;
+		 this.width=width;
+		 this.height=height;
+		 
+		 start_all_btn.setLayoutX(2);
+		 start_all_btn.setLayoutY(2);
+		 
+		 stop_all_btn.setDisable(true);
+		 stop_all_btn.setLayoutX(60);
+		 stop_all_btn.setLayoutY(2);
+		 stop_all_btn.setDisable(true);
+		 
+		 start_all_btn.setOnAction(event->{
+			 try {
+				start_all();
+			} catch (Exception e1){
+				 System.err.println("E:"+e1);
+			}
+		 });
+		 
+		 stop_all_btn.setOnAction(event->{
+		     try {
+				stop_all();
+			} catch (IOException e) {
+				 System.err.println("E:"+e);
+			}	 
+		 });
+		 
+			tip1.setText("关闭");
+			tip1.setLayoutX(120);
+			tip1.setLayoutY(5);
+			
+		 for(int i=0;i<COUNT;i++){
+			 start_btn[i]=new Button("启动");
+			 stop_btn[i]=new Button("终止");
+			 Label tip=new Label();
+			 root.getChildren().addAll(start_btn[i],stop_btn[i],tip);
+		 }
+		 
+		 root.getChildren().addAll(start_all_btn,stop_all_btn,tip1);
+		 
+	}
+    public void start_all() throws InterruptedException, UnknownHostException, IOException{
+    	 for(int i=0;i<COUNT;i++){
+        	 socket1[i] = new Socket(host1, port1);
+        	 socket2[i] = new Socket(host2,port2);
+        	 th1[i]=new ReceiveThread21(socket1[i],this,"/1.txt",accountNameForEnglish[i],i);
+        	 th1[i].start();
+        	 th2[i]=new ReceiveThread22(socket2[i],this,new String[]{"xiaohao/2.txt","xiaohao/3.txt","xiaohao/4.txt","xiaohao/5.txt","xiaohao/6.txt","xiaohao/7.txt","xiaohao/8.txt","xiaohao/9.txt","xiaohao/10.txt"},tip1);
+        	 th2[i].start();
+    	 }
+         
+
+    	 start_btn.setDisable(true);
+    	 stop_btn.setDisable(false);
+    }
+    
+    public void stop_all() throws IOException{
+   	     start_btn.setDisable(false);
+   	     stop_btn.setDisable(true);
+   	     tip1.setText("关闭");
+   	     if(socket1!=null&&!socket1.isClosed()) socket1.close();
+   	     if(socket2!=null&&!socket2.isClosed()) socket2.close();
+    }
+    public void showOnTip(Label tip,String s){
+    	tip.setText(s);
+    }
+}

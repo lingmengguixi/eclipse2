@@ -1,0 +1,83 @@
+%% @author Administrator
+%% @doc @todo Add description to ch_sup.
+
+
+-module(ch_sup).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-behaviour(supervisor).
+-export([start_link/0]).
+-export([init/1]).
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+%%  3. 重启策略
+%% 
+%% one_for_one
+%% 
+%% 假如一个进程终止了，仅仅这个进程会被重启
+%% 
+%% one_for_all
+%% 
+%% 假如一个进程停止了，所有其他子进程也要被停止，然后所有子进程，包括这个引发停止的子进程都被重启
+%% 
+%% rest_for_one
+%% 
+%% 假如一个进程停止了，它后面的子进程，也就是以启动顺序来说这个被终止的进程后面的子进程都将被停止，然后他们又被启动。
+
+%%  4. 最大启动频率
+%% 
+%% 监督者有一个内建机制限制在给定的时间间隔里的重启次数，这由子进程启动规程中的两个参数值决定，MaxR和MaxT，它们定义在回调函数init中
+%% 
+%% init(...) -> {ok, {{RestartStrategy, MaxR, MaxT}, [ChildSpec, ...]}}.
+%% 
+%% 如果在时间MaxT里重启次数大于MaxR ，监督者进程就停止它所有子进程，然后再终止自己。
+%% 
+%% 当监督者进程终止了，那么更高级别的监督者要采取些动作，它或者重启被终止的监督者或者停止自己
+%% 
+%% 这个重启机制的目的是预防一个进程因某种原因频繁的终止，然后简单的重启。
+
+%%  5. 子规范
+%% 
+%% 下面的是类型定义
+
+%% {Id, StartFunc, Restart, Shutdown, Type, Modules} 
+%% Id = term() 
+%% StartFunc = {M, F, A} 
+%% M = F = atom() 
+%% A = [term()] 
+%% Restart = permanent | transient | temporary 
+%% Shutdown = brutal_kill | integer() >=0 | infinity 
+%% Type = worker | supervisor 
+%% Modules = [Module] | dynamic 
+%% Module = atom()
+%%  
+%%     Id用来内部标识子规范
+%%     StartFunc是启动子进程时调用的函数，它将成为对supervisor:start_link, gen_server:start_link, gen_fsm:start_link or gen_event:start_link的调用
+%%     Restart标识一个进程终止后将怎样重启，一个permanent 进程总会被重启；一个temporary 进程从不会被重启；一个transient 进程仅仅当是不正常的被终止后才重启，例如非normal得退出原因
+%%     Shutdown 定义一个进程将怎样被终止，brutal_kill意味着子进程被exit(Child, kill)无条件的终止；
+%%     一个整数值的超时时间意味着监督者告诉子进程通过调用exit(Child, shutdown)而被终止，然后等待一个返回的退出信号，假如在指定的时间里没有收到退出信号，那么子进程用exit(Child, kill)被无条件终止。
+%%     Type指定子进程是supervisor还是worker
+%%     Modules 是有一个元素的列表[Module]，假如子进程是supervisor、gen_server 或 gen_fsm，那么Module 是回调模块的名称；假如子进程是gen_event，那么Modules 应该是dynamic
+
+start_link() -> 
+	%% 注意supervisor:start_link是同步的，它一直等到所有子进程都启动了才返回
+	X=supervisor:start_link(ch_sup, []),
+	X.
+
+%% one_for_one是重启策略
+%%　1和60定义了最大重启频率
+%% {ch3, …}是子规程
+init(_Args) -> 
+	process_flag(trap_exit, true),
+	io:format("I:ch_sup init!~n"),
+	{ok, {{one_for_one, 100, 60}, [
+								   %{ch3, {ch3, start_link, []}, permanent,80000, worker, [ch3]},
+								   %{gen_event_test1, {gen_event_test1, start_link, []}, permanent,80000, worker, [gen_event_test1]}
+								  ]}}.
+  % {ok, {{one_for_one, 100, 60}, [{gen_event_test1, {gen_event_test1, start_link, []}, permanent,80000, worker, [gen_event_test1]}]}}.
+

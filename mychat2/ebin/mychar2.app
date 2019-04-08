@@ -1,0 +1,9 @@
+{application,mychar2,
+             [{description,[]},
+              {vsn,"1"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {mod,{mychar2_app,[]}},
+              {env,[]},
+              {modules,[chatConnect,myChatServer2,mychar2_app,mychat2_app,
+                        mychat2_sup]}]}.

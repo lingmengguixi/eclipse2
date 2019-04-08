@@ -1,0 +1,46 @@
+%% @author Administrator
+%% @doc @todo Add description to chatClient.
+
+
+-module(chatClient).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/0]).
+-include("head.hrl").
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+ 
+start()->
+   connectNet().
+
+connectNet()->
+   case gen_tcp:connect(?HOST,?PORT,[list,{packet,0}]) of
+	    {ok,Socket}->
+			UserReceive=spawn(fun()->startRecive(Socket) end),
+			gen_tcp:controlling_process(Socket, UserReceive), 
+			command(Socket);
+	    Args->io:format("cannot connect the network!~ncause:~p~n",[Args])
+   end.
+
+command(Socket)->
+	Command=io:get_line('>'),
+	case Command of
+		 "login\n" ->login;
+		 "logout\n" ->logout;
+		 "who\n"->who
+	end,
+	command(Socket).
+
+startRecive(Socket)->
+	receive
+		{tcp,Socket,List}->
+			io:format("from server:~p~n",[List]),
+			startRecive(Socket);
+		{tcp_closed,Socket}->
+			io:format("close~n")
+	end.

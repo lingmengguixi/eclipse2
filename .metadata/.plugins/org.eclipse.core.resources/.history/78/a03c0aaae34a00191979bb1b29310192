@@ -1,0 +1,19 @@
+-record(user, {
+        id      	 %% 用户ID
+        ,name   	 %% 用户名称
+        ,passwd 	 %% 用户登录密码
+        ,login_times %% 登录次数
+        ,chat_times  %% 聊天次数
+        ,last_login  %% 最后一次登录时间
+    }
+).
+
+-record(msg, {
+	    fromId,      %% 发送消息的用户id
+    	toId,        %% 收到消息的用户的id
+	    chatType,    %% 聊天方式(文件，语音，纯消息...)
+	    chatMsg		 %% 聊天内容
+}).
+
+-define(HOST,"127.0.0.1").
+-define(PORT,4561).

@@ -1,0 +1,54 @@
+%% @author Administrator
+%% @doc @todo Add description to homework.
+
+
+-module(homework).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([main1/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+odd_list1([X|T])->
+	if 
+		X rem 2=:=1->[X|odd_list1(T)];
+		true ->odd_list1(T)
+	end;
+odd_list1([])->
+	[].
+
+odd_list2(L)->
+	lists:filter(fun(X)->X rem 2=:=1 end, L).
+
+odd_list3(L)->
+	odd_list3(L,[]).
+odd_list3([X|L],T) when X rem 2=:=1->
+	odd_list3(L,[X|T]);
+odd_list3([X|L],T)->
+	odd_list3(L,T);
+odd_list3([],T)->
+	lists:reverse(T).
+
+odd_list4([X|T])->
+	case X rem 2 of
+		1->[X|odd_list4(T)];
+		_->odd_list4(T)
+	end;
+odd_list4(_)->
+    [].
+
+odd_list5([X|T])->
+	odd_list5(X rem 2,T);
+odd_list5(_)->[].
+odd_list5(1,[X|T])->
+	[X|odd_list5(T)];
+odd_list5(_,T)->T.
+
+main1()->
+   L = [1, 2, 3, 4, 5, 6, 7, 8, 9],
+   odd_list5(L).

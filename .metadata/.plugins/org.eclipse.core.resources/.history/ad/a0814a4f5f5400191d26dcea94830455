@@ -1,0 +1,39 @@
+-define(APPNAME,mychat2).
+-define(SERVERNAME,myChatServer2).
+-define(SERVERMODULE,myChatServer2).
+-define(CONNECTNAME,connect2).
+-define(PORT,5656).
+-define(EVENTNAME,myEvent).
+-define(SUPTREENAME,mychat2_sup).
+-define(SUP_PREUSER_NAME,preUserServer_sup).
+-define(SUP_PREUSER_MODULE,preUserServer_sup).
+-define(DEBUG,true).
+-define(PREUSER_NAME,preUserServer).
+-define(PREUSER_MODULE,preUserServer).
+-define(HOST,"127.0.0.1").
+-define(LOGINFLAG,101).
+-define(LOGOUTFLAG,102).
+-define(SENDTOFLAG,103).
+-define(IDLEN,80).
+-record(user, {
+         name   	 %% 用户名称
+        ,passwd="123456" 	 %% 用户登录密码
+        ,login_times=0 %% 登录次数
+        ,chat_times=0  %% 聊天次数
+        ,last_login=now()  %% 最后一次登录时间
+        ,pid        %%记录当前用户在那个进程登陆
+    }
+).
+ 
+
+%% aa
+-ifdef(DEBUG).
+-ifndef(DEBUG_).
+-define(DEBUG_,true).
+-define(SHOW(A),io:format("~p~n",[A])).
+-define(SHOW(A,B),io:format(A,B)).
+-endif.
+-else.
+-define(SHOW(A),ok).
+-define(SHOW(A,B),ok).
+-endif.

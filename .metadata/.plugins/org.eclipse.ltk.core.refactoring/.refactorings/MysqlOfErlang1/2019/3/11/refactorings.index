@@ -1,0 +1,8 @@
+1552556458458	Move 'mysql_auth.erl' to 'mysql'
+1552556460571	Move 'mysql_conn.erl' to 'mysql'
+1552556462395	Move 'mysql_recv.erl' to 'mysql'
+1552556463950	Move 'mysql.erl' to 'mysql'
+1552556465072	Move 'mysql.hrl' to 'mysql'
+1552622245356	Rename resource 'innodb_memory.erl'
+1552622978196	Move 'digit_test.erl' to 'src'
+1552706988486	Rename resource 'fun_text.erl'

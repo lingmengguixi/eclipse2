@@ -1,0 +1,25 @@
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String [] argv) throws UnknownHostException, IOException{
+    	Socket s=new Socket("127.0.0.1", 5656);
+    	OutputStream outs=s.getOutputStream();
+    	BufferedWriter write=new BufferedWriter(new OutputStreamWriter(outs,"utf-8"));
+    	Scanner in=new Scanner(System.in);
+    	while(true){
+    		System.out.println("输入文本发送");
+    		String ss=in.nextLine();
+        	write.write(ss+"\r\n");
+        	outs.flush();
+        	if(s==null) break;
+    	}
+         in.close();
+         s.close();
+    }
+}

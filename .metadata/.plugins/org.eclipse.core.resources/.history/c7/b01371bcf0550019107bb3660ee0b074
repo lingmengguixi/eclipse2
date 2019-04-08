@@ -1,0 +1,52 @@
+package org.scau.lzk.auto;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
+import org.scau.lzk.Tool;
+
+import application.MainScene;
+
+public class ReceiveThread21 extends Thread{
+    Socket socket=null;
+    MainScene1 mainScene;
+	public ReceiveThread21(Socket socket, MainScene1 mainScene) {
+		this.socket=socket;
+		this.mainScene=mainScene;
+	}
+	@Override
+	public void run(){
+		System.out.println("账号许可连接");
+		try {
+			OutputStream outs=socket.getOutputStream();
+			InputStream ins=socket.getInputStream();
+			byte[] packet1=Tool.getHexFromFile("1.txt");
+            outs.write(packet1);
+            outs.flush();
+            while(true){
+            	int c=ins.read();
+            	if(c==-1) break;
+            }
+		} catch (Exception e) {
+			System.err.println("E:"+e);
+			if(socket!=null&&!socket.isClosed()){
+				try {
+					socket.close();
+				} catch (IOException e1) {
+				}
+			}
+		}
+        System.out.println("账号许可断开");
+	}
+	public void stop1(){
+		if(socket!=null&&!socket.isClosed()){
+			try {
+				socket.close();
+			} catch (IOException e) {
+			}
+		}
+	}
+}

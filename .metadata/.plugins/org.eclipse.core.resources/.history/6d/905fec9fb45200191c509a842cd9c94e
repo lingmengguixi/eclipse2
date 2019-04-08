@@ -1,0 +1,22 @@
+%% @author Administrator
+%% @doc @todo Add description to preUserServer.
+
+
+-module(preUserServer).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([start/1]).
+-include("head.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+start(Socket)->
+   ?SHOW("a user connect"),
+   myChatServer2:newUserConnect(),
+    ffg.

@@ -1,0 +1,14 @@
+package org.scau.lzk;
+
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+
+public class MainScene extends Scene {
+
+	public MainScene(Pane root, double width, double height) {
+		super(root, width, height);
+		
+	}
+
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;org.scau.lzk.main.client&apos; to &apos;Client&apos;&#x0D;&#x0A;- Original project: &apos;JavaClient&apos;&#x0D;&#x0A;- Original element: &apos;org.scau.lzk.main.client&apos;&#x0D;&#x0A;- Renamed element: &apos;org.scau.lzk.main.Client&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;client&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;org.scau.lzk.main{client.java[client" matchStrategy="1" name="Client" qualified="false" references="true" similarDeclarations="false" stamp="1553580666894" textual="false" version="1.0"/>
+</session>

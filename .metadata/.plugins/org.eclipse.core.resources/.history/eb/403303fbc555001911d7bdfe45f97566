@@ -1,0 +1,26 @@
+%% @author Administrator
+%% @doc @todo Add description to mysql.
+
+
+-module(mysql).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([init/0]).
+-include("head1.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+   %% 初始化表
+init()->
+   mysql:start_link(p1, ?DB_HOST, ?DB_PORT, ?DB_USER, ?DB_PASS, ?DB_NAME, fun(_, _, _, _) -> ok end,"utf8"),
+   mysql:connect(p1, ?DB_HOST, undefined, ?DB_USER, ?DB_PASS, ?DB_NAME, true),
+   mysql:fetch(p1, <<"drop table if exists test_InnoDB">>),
+   mysql:fetch(p1, <<"create table test_InnoDB (id int not null auto_increment,row1 int not null, row2 int not null,row3 int not null,row4 int not null,row5 int not null,row6 int not null,row7 int not null,row8 int not null,row9 int not null, primary key (id)) engine = InnoDB">>),
+   mysql:fetch(p1, <<"drop table if exists test_memory">>),
+   mysql:fetch(p1, <<"create table test_memory (id int not null auto_increment,row1 int not null, row2 int not null,row3 int not null,row4 int not null,row5 int not null,row6 int not null,row7 int not null,row8 int not null,row9 int not null, primary key (id)) engine = memory">>),
+   ok.

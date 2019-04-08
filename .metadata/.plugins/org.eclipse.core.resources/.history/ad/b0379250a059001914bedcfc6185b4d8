@@ -1,0 +1,22 @@
+package org.scau.lzk;
+
+ 
+
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+
+public class MainScene extends Scene {
+    private TextArea input_tx=new TextArea();
+    private TextArea output_tx=new TextArea();
+	public MainScene(Pane root, double width, double height) {
+		super(root, width, height);
+		
+		input_tx.minWidthProperty().bind(this.widthProperty().subtract(10));
+		input_tx.maxWidthProperty().bind(this.widthProperty().subtract(10));
+		
+	}
+
+}

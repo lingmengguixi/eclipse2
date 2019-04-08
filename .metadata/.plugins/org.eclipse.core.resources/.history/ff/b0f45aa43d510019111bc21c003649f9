@@ -1,0 +1,23 @@
+%% @author Administrator
+%% @doc @todo Add description to test.
+
+
+-module(test).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([t/0]).
+
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+t()->
+  {ok,_}=gen_event_test1:start_link(),
+  gen_event_test1:add(),
+  gen_event_test1:add_sup(),
+  gen_event_test1:stop().

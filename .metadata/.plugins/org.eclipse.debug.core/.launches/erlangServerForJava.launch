@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.erlide.backend.erlangProcess">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/erlangServerForJava"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<mapAttribute key="org.eclipse.debug.core.environmentVariables"/>
+<booleanAttribute key="org.erlide.core.console" value="true"/>
+<stringAttribute key="org.erlide.core.cookie" value="erlide"/>
+<booleanAttribute key="org.erlide.core.has_backend" value="false"/>
+<booleanAttribute key="org.erlide.core.loadAllNodes" value="false"/>
+<booleanAttribute key="org.erlide.core.longName" value="false"/>
+<stringAttribute key="org.erlide.core.nodeName" value="erlangServerForJava"/>
+<stringAttribute key="org.erlide.core.projects" value="erlangServerForJava"/>
+<stringAttribute key="org.erlide.core.runtime" value="erl7.2"/>
+<stringAttribute key="org.erlide.core.working_dir" value="D:/code/eclipse2/erlangServerForJava"/>
+</launchConfiguration>

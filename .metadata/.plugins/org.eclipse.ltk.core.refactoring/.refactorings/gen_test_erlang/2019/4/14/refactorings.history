@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;gen_test_erlang/src/test_sup_gen_fsm/logger.erl&apos; to &apos;my_logger.erl&apos;" description="Rename resource &apos;logger.erl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/test_sup_gen_fsm/logger.erl" name="my_logger.erl" stamp="1554260760568" updateReferences="true"/>
+</session>

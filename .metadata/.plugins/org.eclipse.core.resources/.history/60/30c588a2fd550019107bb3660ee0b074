@@ -1,0 +1,91 @@
+package org.scau.lzk.auto;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+
+import org.scau.lzk.Tool;
+
+import application.MainScene;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
+
+public class ReceiveThread22 extends Thread {
+	private Socket socket;
+	private MainScene1 mainScene;
+	// private Timeline timeline;
+	private String[] packFile;
+	private Label tip;
+	private byte[] cache = new byte[100000];
+
+	public ReceiveThread22(Socket socket, MainScene1 mainScene, String[] packFile, Label tip) {
+		this.socket = socket;
+		this.mainScene = mainScene;
+		this.packFile = packFile;
+		this.tip = tip;
+	}
+
+	@Override
+	public void run() {
+		System.out.println("主socket可连接");
+		int count = 0;
+		try {
+			OutputStream outs = socket.getOutputStream();
+			InputStream ins = socket.getInputStream();
+			socket.setSoTimeout(3000);
+			for (int i = 0; i < packFile.length; i++) {
+				byte[] packet1;
+				packet1 = Tool.getHexFromFile(packFile[i]);
+				final int ii = i;
+				Platform.runLater(() -> {
+					mainScene.showOnTip(tip, "send " + packFile[ii]);
+				});
+				outs.write(packet1);
+				outs.flush();
+				count = 0;
+				while (true) {
+					try {
+						int c = ins.read();
+						if (c == -1) {
+							System.out.println("对方发送完毕");
+							break;
+						}
+						cache[count++] = (byte) c;
+					} catch (SocketTimeoutException e1) {
+						break;
+					}
+				}
+				System.out.println("send " + packFile[i] + " receive count:" + count);
+				if(count==0) break;
+				if(count>0&&count<50) {
+					Tool.showHexWithByte(cache, count);
+					Tool.showStringWithByte(cache, count);
+				}
+			}
+
+		} catch (Exception e1) {
+			System.err.println("E:" + e1);
+			if (socket != null && !socket.isClosed()) {
+				try {
+					socket.close();
+				} catch (IOException e2) {
+
+				}
+			}
+		}
+		System.out.println("主socket断开");
+		Platform.runLater(() -> {
+			try {
+				mainScene.stop();
+			} catch (IOException e) {
+
+			}
+		});
+	}
+}

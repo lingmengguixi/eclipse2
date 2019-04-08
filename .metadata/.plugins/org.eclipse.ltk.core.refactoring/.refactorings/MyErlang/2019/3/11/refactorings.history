@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;MyErlang/src/ets.erl&apos; to &apos;ets_test.erl&apos;" description="Rename resource &apos;ets.erl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/ets.erl" name="ets_test.erl" stamp="1552266018833" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;MyErlang/src/demo/demo1.erl&apos; to &apos;demo11.erl&apos;" description="Rename resource &apos;demo1.erl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/demo/demo1.erl" name="demo11.erl" stamp="1552457258891" updateReferences="true"/>
+</session>

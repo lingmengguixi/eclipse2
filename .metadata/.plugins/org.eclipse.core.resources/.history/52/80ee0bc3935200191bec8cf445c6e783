@@ -1,0 +1,12 @@
+{application, mychar2,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { mychar2_app, []}},
+  {env, []}
+ ]}.

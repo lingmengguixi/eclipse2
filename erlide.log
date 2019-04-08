@@ -1,0 +1,4 @@
+09:23:11,291 I: (ErlangCore.java:63) : Starting CORE Thread[Worker-7,5,main]
+09:23:11,314 I: (ErlangCore.java:73) : *** starting Erlide v0.55.0.201901051528~0.55.0.201805231952 (model api=0.55.0.201805231952) (kernel=?~0.115.3.201806041948) *** (GBK)
+09:23:11,326 I: (ErlangCore.java:80) : Started CORE
+09:23:11,328 F: (ErlangPlugin.java:89) : Core started

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;mychat2/include/head1.hrl&apos; to &apos;head.hrl&apos;" description="Rename resource &apos;head1.hrl&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="include/head1.hrl" name="head.hrl" stamp="1553920245845" updateReferences="true"/>
+</session>

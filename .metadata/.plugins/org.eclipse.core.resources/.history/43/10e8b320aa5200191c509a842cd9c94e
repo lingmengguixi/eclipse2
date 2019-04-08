@@ -1,0 +1,21 @@
+%% @author Administrator
+%% @doc @todo Add description to info.
+
+
+-module(info).
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([t/0]).
+-include("head1.hrl").
+
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+
+t()->
+  ?SHOW("process info:"),
+  ?SHOW("~p~n",[erlang:process_info(whereis(?SUPTREENAME))]).
